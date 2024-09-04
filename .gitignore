@@ -1,0 +1,4 @@
+nest-graphql/
+postgres-pgadmin/data/
+pokemon-app/.env
+cron-ticker/node_modules/
