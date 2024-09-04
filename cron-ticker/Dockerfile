@@ -1,7 +1,5 @@
 # Esta imagen tiene carpetas como: /app /usr /lib etc...
-#FROM --platform=linux/arm64/v8 node:19.2-alpine3.16
-FROM --platform=$BUILDPLATFORM node:19.2-alpine3.16
-#FROM node:19.2-alpine3.16
+FROM node:19.2-alpine3.16 as Deps
 
 # cd app
 WORKDIR /app
@@ -11,18 +9,37 @@ COPY package.json ./
 
 # Comando RUN corre el comando en el terminal de la imagen al momento de crear la imagen
 RUN npm install
+# END Deps--------------------------------------------
 
-#copia el app.js a ./
+FROM node:19.2-alpine3.16 as Builder
+
+WORKDIR /app
+
+COPY --from=Deps /app/node_modules ./node_modules
+
 COPY . .
 
-# Realizamos testings
 RUN npm run test
+# END Builder--------------------------------------------
 
-# Elimina archivos y directorios no necesarios en PROD
-RUN rm -rf /test && rm -rf node_modules
 
-# Unicamente instala las dependencias necesarias para correr la aplicación en PROD
+FROM node:19.2-alpine3.16 as ProdStage
+
+WORKDIR /app
+
+COPY package.json .
+
 RUN npm install --prod
+# END ProdStage--------------------------------------------
+
+
+FROM node:19.2-alpine3.16 as Runner
+
+WORKDIR /app
+
+COPY --from=ProdStage /app/node_modules ./node_modules
+COPY app.js .
+COPY tasks ./tasks
 
 #CMD ejecuta el comando en el terminal de la imagen pero al momento de montar/correr la imagen
 CMD [ "node", "app.js" ]
