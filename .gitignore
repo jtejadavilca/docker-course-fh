@@ -2,3 +2,5 @@ nest-graphql/
 postgres-pgadmin/data/
 pokemon-app/.env
 cron-ticker/node_modules/
+teslo-shop/node_modules/
+teslo-shop/.env
