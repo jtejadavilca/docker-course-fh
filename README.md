@@ -212,3 +212,31 @@ phpmyadmin:5.2.0-apache
 ```
 
 > Ambos contenedores ya apuntan a la misma red y pueden conectarse sin problemas.
+
+___
+# Creación de imágen para varias arquitecturas:
+
+En ocasiones va a ser necesario generar una imagen que sea soportada en varias arquitecturas, y la mejor forma es usando el comando `docker buildx`. E.g.:
+
+Pero lo primero es crear un *builder* y se hace de la siguiente forma:
+
+```Shell
+docker buildx create `
+--name container-builder `
+--driver docker-container `
+--use --bootstrap
+```
+
+Si se tiene solo un builder creado, va a ser ese el que se usará por default. Luego es posible crear la imagen.
+
+```Shell
+docker buildx build `
+--platform=linux/amd64,linux/arm64,linux/amd64/v2,linux/amd64/v3 `
+-t jtejadavilca/cron-ticker `
+--push .
+```
+
+También es posible examinar una imágen para saber las arquitecturas que soporta con el siguiente comando:
+```
+docker buildx imagetools inspect jtejadavilca/cron-ticker:latest
+```
