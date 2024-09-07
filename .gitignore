@@ -4,3 +4,5 @@ pokemon-app/.env
 cron-ticker/node_modules/
 teslo-shop/node_modules/
 teslo-shop/.env
+graphql-actions/node_modules/
+react-heroes/node_modules/
