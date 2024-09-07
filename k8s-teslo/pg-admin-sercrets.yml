@@ -1,0 +1,11 @@
+# Secret for PgAdmin
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pg-admin-secrets
+type: Opaque
+data:
+  # base64 encoded "123456"
+  PG_USER_EMAIL: c3VwZXJtYW5AZ21haWwuY29t
+  # base64 encoded "superman@gmail.com"
+  PGADMIN_PASSWORD: MTIzNDU2
